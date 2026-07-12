@@ -10,12 +10,24 @@ from routers.fuel import router as fuel_router
 from routers.expense import router as expense_router
 from routers.dashboard import router as dashboard_router
 from routers.reports import router as reports_router
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
     description="Smart Transport Operations Platform"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:5500",
+        "http://localhost:5500"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 Base.metadata.create_all(bind=engine)

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>TransitOps | Drivers</title>
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
+    <link rel="stylesheet"
+          href="css/dashboard.css">
+
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <i class="fas fa-truck-moving"></i>
+
+            <span>TransitOps</span>
+
+        </div>
+
+        <ul class="sidebar-menu">
+
+            <li>
+
+                <a href="dashboard.html">
+
+                    <i class="fas fa-chart-pie"></i>
+
+                    <span>Dashboard</span>
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="vehicles.html">
+
+                    <i class="fas fa-truck"></i>
+
+                    <span>Vehicles</span>
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="drivers.html"
+                   class="active">
+
+                    <i class="fas fa-user"></i>
+
+                    <span>Drivers</span>
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="trips.html">
+
+                    <i class="fas fa-route"></i>
+
+                    <span>Trips</span>
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="fuel.html">
+
+                    <i class="fas fa-gas-pump"></i>
+
+                    <span>Fuel</span>
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="maintenance.html">
+
+                    <i class="fas fa-screwdriver-wrench"></i>
+
+                    <span>Maintenance</span>
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="expenses.html">
+
+                    <i class="fas fa-wallet"></i>
+
+                    <span>Expenses</span>
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="reports.html">
+
+                    <i class="fas fa-chart-line"></i>
+
+                    <span>Reports</span>
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- Main Content -->
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>Driver Management</h1>
+
+                <p>
+
+                    Manage drivers, licenses and availability.
+
+                </p>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="search-box">
+
+                    <i class="fas fa-search"></i>
+
+                    <input type="text"
+                           id="searchDriver"
+                           placeholder="Search Driver...">
+
+                </div>
+
+                <button class="btn btn-primary">
+
+                    <i class="fas fa-user-plus"></i>
+
+                    Add Driver
+
+                </button>
+
+            </div>
+
+        </header>
+
+        <!-- Summary Cards -->
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+
+                <div>
+
+                    <p>Total Drivers</p>
+
+                    <h2 id="totalDrivers">0</h2>
+
+                </div>
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-users"></i>
+
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div>
+
+                    <p>Available</p>
+
+                    <h2 id="availableDrivers">0</h2>
+
+                </div>
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-circle-check"></i>
+
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div>
+
+                    <p>Assigned</p>
+
+                    <h2 id="assignedDrivers">0</h2>
+
+                </div>
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-route"></i>
+
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div>
+
+                    <p>Avg Safety</p>
+
+                    <h2 id="avgSafety">0%</h2>
+
+                </div>
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-shield-halved"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+        <!-- ==========================================================
+             Drivers Table
+        =========================================================== -->
+
+        <section class="card mt-30">
+
+            <div class="card-header">
+
+                <h3>
+
+                    <i class="fas fa-users"></i>
+
+                    Driver Directory
+
+                </h3>
+
+                <div>
+
+                    <button class="btn btn-success"
+                            onclick="loadDrivers()">
+
+                        <i class="fas fa-rotate"></i>
+
+                        Refresh
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Name</th>
+
+                            <th>License No.</th>
+
+                            <th>Phone</th>
+
+                            <th>Experience</th>
+
+                            <th>Safety Score</th>
+
+                            <th>Status</th>
+
+                            <th>Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="driverTable">
+
+                        <tr>
+
+                            <td colspan="8"
+                                style="text-align:center;padding:40px;">
+
+                                <i class="fas fa-spinner fa-spin"></i>
+
+                                Loading Drivers...
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================================================
+             Driver Statistics
+        =========================================================== -->
+
+        <section class="dashboard-grid mt-30">
+
+            <div class="card chart-card">
+
+                <div class="card-header">
+
+                    <h3>
+
+                        <i class="fas fa-chart-pie"></i>
+
+                        Driver Statistics
+
+                    </h3>
+
+                </div>
+
+                <canvas id="driverChart"></canvas>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3>
+
+                        <i class="fas fa-circle-info"></i>
+
+                        Driver Summary
+
+                    </h3>
+
+                </div>
+
+                <div class="summary-box">
+
+                    <div class="summary-item">
+
+                        <span>Total Drivers</span>
+
+                        <strong id="summaryTotalDrivers">
+
+                            0
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-item">
+
+                        <span>Available</span>
+
+                        <strong id="summaryAvailableDrivers">
+
+                            0
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-item">
+
+                        <span>Assigned</span>
+
+                        <strong id="summaryAssignedDrivers">
+
+                            0
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-item">
+
+                        <span>Average Safety</span>
+
+                        <strong id="summarySafety">
+
+                            0%
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================================================
+             Toast
+        =========================================================== -->
+
+        <div id="toast"
+             class="toast">
+
+        </div>
+
+        <!-- ==========================================================
+             Loader
+        =========================================================== -->
+
+        <div id="loader"
+             style="
+                display:none;
+                position:fixed;
+                inset:0;
+                background:rgba(255,255,255,.75);
+                z-index:9999;
+                justify-content:center;
+                align-items:center;
+             ">
+
+            <div class="loader"></div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- ==========================================================
+     Scripts
+========================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="js/api.js"></script>
+
+<script src="js/drivers.js"></script>
+
+</body>
+
+</html>

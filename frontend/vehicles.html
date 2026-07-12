@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>TransitOps | Vehicles</title>
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
+    <link rel="stylesheet"
+          href="css/dashboard.css">
+
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- =======================
+         Sidebar
+    ======================== -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <i class="fas fa-truck-moving"></i>
+
+            <span>TransitOps</span>
+
+        </div>
+
+        <ul class="sidebar-menu">
+
+            <li>
+
+                <a href="dashboard.html">
+
+                    <i class="fas fa-chart-pie"></i>
+
+                    <span>Dashboard</span>
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="vehicles.html"
+                   class="active">
+
+                    <i class="fas fa-truck"></i>
+
+                    <span>Vehicles</span>
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="drivers.html">
+
+                    <i class="fas fa-user"></i>
+
+                    <span>Drivers</span>
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="trips.html">
+
+                    <i class="fas fa-route"></i>
+
+                    <span>Trips</span>
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="fuel.html">
+
+                    <i class="fas fa-gas-pump"></i>
+
+                    <span>Fuel</span>
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="maintenance.html">
+
+                    <i class="fas fa-screwdriver-wrench"></i>
+
+                    <span>Maintenance</span>
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="expenses.html">
+
+                    <i class="fas fa-wallet"></i>
+
+                    <span>Expenses</span>
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="reports.html">
+
+                    <i class="fas fa-chart-line"></i>
+
+                    <span>Reports</span>
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="settings.html">
+
+                    <i class="fas fa-gear"></i>
+
+                    <span>Settings</span>
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- =======================
+         Main Content
+    ======================== -->
+
+    <main class="main-content">
+
+        <!-- Top Bar -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>Vehicle Management</h1>
+
+                <p>
+                    Monitor and manage all fleet vehicles.
+                </p>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="search-box">
+
+                    <i class="fas fa-search"></i>
+
+                    <input type="text"
+                           id="searchVehicle"
+                           placeholder="Search vehicle...">
+
+                </div>
+
+                <button class="btn btn-primary">
+
+                    <i class="fas fa-plus"></i>
+
+                    Add Vehicle
+
+                </button>
+
+            </div>
+
+        </header>
+
+        <!-- Vehicle Summary -->
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+
+                <div>
+
+                    <p>Total Vehicles</p>
+
+                    <h2 id="totalVehicles">0</h2>
+
+                </div>
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-truck"></i>
+
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div>
+
+                    <p>Available</p>
+
+                    <h2 id="availableVehicles">0</h2>
+
+                </div>
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-circle-check"></i>
+
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div>
+
+                    <p>In Use</p>
+
+                    <h2 id="inUseVehicles">0</h2>
+
+                </div>
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-road"></i>
+
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div>
+
+                    <p>Maintenance</p>
+
+                    <h2 id="maintenanceVehicles">0</h2>
+
+                </div>
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-screwdriver-wrench"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ==========================================================
+             Vehicles Table
+        =========================================================== -->
+
+        <section class="card mt-30">
+
+            <div class="card-header">
+
+                <h3>
+
+                    <i class="fas fa-truck"></i>
+
+                    Fleet Vehicles
+
+                </h3>
+
+                <div>
+
+                    <button class="btn btn-success"
+                            onclick="loadVehicles()">
+
+                        <i class="fas fa-rotate"></i>
+
+                        Refresh
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Vehicle No.</th>
+
+                            <th>Model</th>
+
+                            <th>Type</th>
+
+                            <th>Capacity</th>
+
+                            <th>Status</th>
+
+                            <th>Driver</th>
+
+                            <th>Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="vehicleTable">
+
+                        <tr>
+
+                            <td colspan="8"
+                                style="text-align:center;padding:40px;">
+
+                                <i class="fas fa-spinner fa-spin"></i>
+
+                                Loading Vehicles...
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================================================
+             Vehicle Details
+        =========================================================== -->
+
+        <section class="dashboard-grid mt-30">
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3>
+
+                        <i class="fas fa-chart-column"></i>
+
+                        Fleet Statistics
+
+                    </h3>
+
+                </div>
+
+                <canvas id="vehicleChart"
+                        height="250">
+
+                </canvas>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3>
+
+                        <i class="fas fa-circle-info"></i>
+
+                        Fleet Summary
+
+                    </h3>
+
+                </div>
+
+                <div class="summary-box">
+
+                    <div class="summary-item">
+
+                        <span>Total Fleet</span>
+
+                        <strong id="fleetTotal">
+
+                            0
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-item">
+
+                        <span>Available</span>
+
+                        <strong id="fleetAvailable">
+
+                            0
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-item">
+
+                        <span>Running</span>
+
+                        <strong id="fleetRunning">
+
+                            0
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-item">
+
+                        <span>Maintenance</span>
+
+                        <strong id="fleetMaintenance">
+
+                            0
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================================================
+             Toast
+        =========================================================== -->
+
+        <div id="toast"
+             class="toast">
+
+        </div>
+
+                <!-- ==========================================================
+             Loader
+        =========================================================== -->
+
+        <div id="loader"
+             style="
+                display:none;
+                position:fixed;
+                inset:0;
+                background:rgba(255,255,255,.75);
+                z-index:9999;
+                justify-content:center;
+                align-items:center;
+             ">
+
+            <div class="loader"></div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- ==========================================================
+     Scripts
+========================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="js/api.js"></script>
+
+<script src="js/vehicles.js"></script>
+
+</body>
+
+</html>

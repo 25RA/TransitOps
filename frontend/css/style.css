@@ -1,0 +1,1386 @@
+/* =============
+   TransitOps 
+   ============== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+:root{
+
+    --primary:#2563eb;
+    --primary-dark:#1d4ed8;
+    --secondary:#0f172a;
+
+    --success:#10b981;
+    --warning:#f59e0b;
+    --danger:#ef4444;
+
+    --background:#f5f7fb;
+    --surface:#ffffff;
+
+    --text:#1f2937;
+    --text-light:#6b7280;
+
+    --border:#e5e7eb;
+
+    --shadow:
+        0 12px 35px rgba(0,0,0,.08);
+
+    --radius:18px;
+
+    --transition:.35s ease;
+
+}
+
+
+/* ==========================================================
+   Reset
+   ========================================================== */
+
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+
+}
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+body{
+
+    font-family:'Poppins',sans-serif;
+
+    background:var(--background);
+
+    color:var(--text);
+
+    overflow-x:hidden;
+
+}
+
+a{
+
+    text-decoration:none;
+
+}
+
+button{
+
+    cursor:pointer;
+
+    font-family:inherit;
+
+}
+
+input,
+button{
+
+    border:none;
+    outline:none;
+
+}
+
+
+/* ==========================================================
+   Login Background
+   ========================================================== */
+
+.login-body{
+
+    min-height:100vh;
+
+    display:flex;
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #2563eb 0%,
+        #1e3a8a 100%
+    );
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+
+/* ==========================================================
+   Floating Animation
+   ========================================================== */
+
+.background{
+
+    position:absolute;
+
+    inset:0;
+
+    overflow:hidden;
+
+    z-index:0;
+
+}
+
+.background span{
+
+    position:absolute;
+
+    display:block;
+
+    border-radius:50%;
+
+    animation:float 18s linear infinite;
+
+    background:
+
+    rgba(255,255,255,.08);
+
+}
+
+.background span:nth-child(1){
+
+    width:180px;
+    height:180px;
+
+    left:5%;
+    top:8%;
+
+}
+
+.background span:nth-child(2){
+
+    width:240px;
+    height:240px;
+
+    right:8%;
+    top:12%;
+
+}
+
+.background span:nth-child(3){
+
+    width:150px;
+    height:150px;
+
+    left:28%;
+    bottom:15%;
+
+}
+
+.background span:nth-child(4){
+
+    width:320px;
+    height:320px;
+
+    right:18%;
+    bottom:-80px;
+
+}
+
+.background span:nth-child(5){
+
+    width:120px;
+    height:120px;
+
+    left:55%;
+    top:55%;
+
+}
+
+.background span:nth-child(6){
+
+    width:210px;
+    height:210px;
+
+    left:72%;
+    top:72%;
+
+}
+
+@keyframes float{
+
+    0%{
+
+        transform:
+            translateY(0)
+            rotate(0deg);
+
+    }
+
+    50%{
+
+        transform:
+            translateY(-35px)
+            rotate(180deg);
+
+    }
+
+    100%{
+
+        transform:
+            translateY(0)
+            rotate(360deg);
+
+    }
+
+}
+
+
+/* ==========================================================
+   Two Column Layout
+   ========================================================== */
+
+.brand-panel{
+
+    width:55%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:80px;
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+.login-panel{
+
+    width:45%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:60px;
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+
+/* ==========================================================
+   Branding
+   ========================================================== */
+
+.brand-content{
+
+    color:#fff;
+
+    max-width:540px;
+
+}
+
+.logo-circle{
+
+    width:95px;
+    height:95px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:40px;
+
+    background:
+
+    rgba(255,255,255,.15);
+
+    backdrop-filter:blur(15px);
+
+    margin-bottom:30px;
+
+}
+
+.brand-content h1{
+
+    font-size:58px;
+
+    font-weight:700;
+
+    margin-bottom:10px;
+
+}
+
+.brand-content h2{
+
+    font-size:24px;
+
+    font-weight:500;
+
+    margin-bottom:20px;
+
+}
+
+.brand-content p{
+
+    line-height:1.8;
+
+    opacity:.92;
+
+    font-size:15px;
+
+    margin-bottom:35px;
+
+}
+
+
+/* ==========================================================
+   Feature List
+   ========================================================== */
+
+.features{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:18px;
+
+}
+
+.features div{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    background:
+
+    rgba(255,255,255,.12);
+
+    backdrop-filter:blur(10px);
+
+    padding:18px;
+
+    border-radius:14px;
+
+}
+
+.features i{
+
+    font-size:20px;
+
+}
+
+.features span{
+
+    font-size:15px;
+
+    font-weight:500;
+
+}
+
+/* ==========================================================
+   Login Card
+   ========================================================== */
+
+.login-card{
+
+    width:100%;
+    max-width:430px;
+
+    padding:50px 40px;
+
+    border-radius:24px;
+
+    background:rgba(255,255,255,.18);
+
+    backdrop-filter:blur(22px);
+
+    -webkit-backdrop-filter:blur(22px);
+
+    border:1px solid rgba(255,255,255,.25);
+
+    box-shadow:0 25px 60px rgba(0,0,0,.25);
+
+    color:#fff;
+
+    animation:fadeUp .8s ease;
+
+}
+
+.login-card h2{
+
+    text-align:center;
+
+    font-size:32px;
+
+    font-weight:700;
+
+    margin-bottom:10px;
+
+}
+
+.subtitle{
+
+    text-align:center;
+
+    color:rgba(255,255,255,.8);
+
+    margin-bottom:35px;
+
+    font-size:15px;
+
+}
+
+
+/* ==========================================================
+   Form
+   ========================================================== */
+
+.input-group{
+
+    margin-bottom:22px;
+
+}
+
+.input-group label{
+
+    display:block;
+
+    margin-bottom:10px;
+
+    font-size:14px;
+
+    font-weight:500;
+
+}
+
+.input-box{
+
+    position:relative;
+
+}
+
+.input-box i:first-child{
+
+    position:absolute;
+
+    left:18px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    color:rgba(255,255,255,.8);
+
+}
+
+.input-box input{
+
+    width:100%;
+
+    height:56px;
+
+    border-radius:14px;
+
+    padding-left:52px;
+
+    padding-right:50px;
+
+    background:rgba(255,255,255,.14);
+
+    border:1px solid rgba(255,255,255,.25);
+
+    color:#fff;
+
+    font-size:15px;
+
+    transition:.3s;
+
+}
+
+.input-box input::placeholder{
+
+    color:rgba(255,255,255,.65);
+
+}
+
+.input-box input:focus{
+
+    border-color:#fff;
+
+    background:rgba(255,255,255,.2);
+
+}
+
+.toggle-password{
+
+    position:absolute;
+
+    right:18px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    cursor:pointer;
+
+    color:rgba(255,255,255,.8);
+
+    transition:.3s;
+
+}
+
+.toggle-password:hover{
+
+    color:#fff;
+
+}
+
+
+/* ==========================================================
+   Login Options
+   ========================================================== */
+
+.login-options{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:28px;
+
+    font-size:14px;
+
+}
+
+.remember{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+}
+
+.remember input{
+
+    accent-color:#fff;
+
+}
+
+.login-options a{
+
+    color:#fff;
+
+    transition:.3s;
+
+}
+
+.login-options a:hover{
+
+    opacity:.8;
+
+}
+
+
+/* ==========================================================
+   Login Button
+   ========================================================== */
+
+.login-btn{
+
+    width:100%;
+
+    height:56px;
+
+    border-radius:14px;
+
+    background:#ffffff;
+
+    color:#2563eb;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    transition:.35s;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:12px;
+
+    box-shadow:0 12px 25px rgba(0,0,0,.18);
+
+}
+
+.login-btn:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 18px 35px rgba(0,0,0,.28);
+
+}
+
+.login-btn:active{
+
+    transform:scale(.98);
+
+}
+
+
+/* ==========================================================
+   Footer
+   ========================================================== */
+
+.footer-text{
+
+    margin-top:30px;
+
+    text-align:center;
+
+    color:rgba(255,255,255,.7);
+
+    font-size:13px;
+
+}
+
+
+/* ==========================================================
+   Reusable Buttons
+   ========================================================== */
+
+.btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:10px;
+
+    padding:12px 22px;
+
+    border-radius:12px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    transition:var(--transition);
+
+}
+
+.btn-primary{
+
+    background:var(--primary);
+
+    color:#fff;
+
+}
+
+.btn-primary:hover{
+
+    background:var(--primary-dark);
+
+}
+
+.btn-success{
+
+    background:var(--success);
+
+    color:#fff;
+
+}
+
+.btn-danger{
+
+    background:var(--danger);
+
+    color:#fff;
+
+}
+
+.btn-warning{
+
+    background:var(--warning);
+
+    color:#fff;
+
+}
+
+
+/* ==========================================================
+   Reusable Cards
+   ========================================================== */
+
+.card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    box-shadow:var(--shadow);
+
+    padding:24px;
+
+}
+
+.section-title{
+
+    font-size:22px;
+
+    font-weight:700;
+
+    color:var(--text);
+
+    margin-bottom:20px;
+
+}
+
+
+/* ==========================================================
+   Basic Table Styling
+   ========================================================== */
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+table thead{
+
+    background:#f4f6fb;
+
+}
+
+table th{
+
+    text-align:left;
+
+    padding:16px;
+
+    font-size:14px;
+
+    color:#555;
+
+}
+
+table td{
+
+    padding:16px;
+
+    border-top:1px solid var(--border);
+
+    font-size:14px;
+
+}
+
+table tbody tr:hover{
+
+    background:#f9fbff;
+
+}
+
+
+/* ==========================================================
+   Fade Animation
+   ========================================================== */
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(40px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ==========================================================
+   DASHBOARD LAYOUT
+========================================================== */
+
+.app-container{
+    display:flex;
+    min-height:100vh;
+    background:var(--background);
+}
+
+/* ==========================================================
+   SIDEBAR
+========================================================== */
+
+.sidebar{
+
+    width:270px;
+    background:linear-gradient(180deg,#0f172a,#1e293b);
+
+    color:#fff;
+
+    display:flex;
+    flex-direction:column;
+
+    position:fixed;
+
+    left:0;
+    top:0;
+    bottom:0;
+
+    overflow-y:auto;
+
+    box-shadow:8px 0 25px rgba(0,0,0,.08);
+
+    z-index:1000;
+
+}
+
+.logo{
+
+    padding:28px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    font-size:24px;
+
+    font-weight:700;
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+.logo i{
+
+    font-size:30px;
+
+    color:#3b82f6;
+
+}
+
+.sidebar-menu{
+
+    padding:20px 0;
+
+    flex:1;
+
+}
+
+.sidebar-menu a{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+    padding:15px 28px;
+
+    color:#cbd5e1;
+
+    font-size:15px;
+
+    transition:.3s;
+
+}
+
+.sidebar-menu a i{
+
+    width:22px;
+
+    text-align:center;
+
+}
+
+.sidebar-menu a:hover{
+
+    background:rgba(59,130,246,.15);
+
+    color:#fff;
+
+    padding-left:35px;
+
+}
+
+.sidebar-menu .active{
+
+    background:#2563eb;
+
+    color:#fff;
+
+    border-left:5px solid #fff;
+
+}
+
+/* ==========================================================
+   MAIN CONTENT
+========================================================== */
+
+.main-content{
+
+    flex:1;
+
+    margin-left:270px;
+
+    padding:30px;
+
+}
+
+/* ==========================================================
+   TOPBAR
+========================================================== */
+
+.topbar{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:18px 25px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+
+    box-shadow:var(--shadow);
+
+}
+
+.topbar-left h2{
+
+    font-size:26px;
+
+    margin-bottom:4px;
+
+}
+
+.topbar-left p{
+
+    color:var(--text-light);
+
+    font-size:14px;
+
+}
+
+.topbar-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+}
+
+.profile{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.profile img{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:50%;
+
+}
+
+.profile-name{
+
+    font-weight:600;
+
+}
+
+/* ==========================================================
+   SEARCH
+========================================================== */
+
+.search-box{
+
+    position:relative;
+
+}
+
+.search-box input{
+
+    width:280px;
+
+    padding:12px 18px 12px 45px;
+
+    border-radius:12px;
+
+    border:1px solid var(--border);
+
+    background:#f8fafc;
+
+}
+
+.search-box i{
+
+    position:absolute;
+
+    left:16px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    color:#94a3b8;
+
+}
+
+/* ==========================================================
+   NOTIFICATION
+========================================================== */
+
+.notification{
+
+    position:relative;
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:50%;
+
+    background:#f1f5f9;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    cursor:pointer;
+
+}
+
+.notification span{
+
+    position:absolute;
+
+    top:6px;
+
+    right:8px;
+
+    width:10px;
+
+    height:10px;
+
+    border-radius:50%;
+
+    background:red;
+
+}
+
+/* ==========================================================
+   KPI GRID
+========================================================== */
+
+.stats-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+
+    gap:24px;
+
+    margin-bottom:30px;
+
+}
+
+.stat-card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    box-shadow:var(--shadow);
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    transition:.3s;
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-6px);
+
+}
+
+.stat-info h4{
+
+    font-size:14px;
+
+    color:var(--text-light);
+
+    margin-bottom:10px;
+
+}
+
+.stat-info h2{
+
+    font-size:34px;
+
+}
+
+.stat-icon{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:18px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:28px;
+
+    color:#fff;
+
+}
+
+.blue{
+    background:#2563eb;
+}
+
+.green{
+    background:#10b981;
+}
+
+.orange{
+    background:#f59e0b;
+}
+
+.red{
+    background:#ef4444;
+}
+
+/* ==========================================================
+   DASHBOARD GRID
+========================================================== */
+
+.dashboard-grid{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr;
+
+    gap:25px;
+
+    margin-bottom:25px;
+
+}
+
+.chart-card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    box-shadow:var(--shadow);
+
+}
+
+.chart-card canvas{
+
+    width:100% !important;
+
+    height:340px !important;
+
+}
+
+/* ==========================================================
+   STATUS BADGES
+========================================================== */
+
+.badge{
+
+    display:inline-block;
+
+    padding:6px 14px;
+
+    border-radius:30px;
+
+    font-size:12px;
+
+    font-weight:600;
+
+}
+
+.badge-success{
+
+    background:#dcfce7;
+
+    color:#166534;
+
+}
+
+.badge-warning{
+
+    background:#fef3c7;
+
+    color:#92400e;
+
+}
+
+.badge-danger{
+
+    background:#fee2e2;
+
+    color:#991b1b;
+
+}
+
+/* ==========================================================
+   TOAST
+========================================================== */
+
+.toast{
+
+    position:fixed;
+
+    right:30px;
+
+    bottom:30px;
+
+    background:#111827;
+
+    color:#fff;
+
+    padding:16px 24px;
+
+    border-radius:12px;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.4s;
+
+    z-index:5000;
+
+}
+
+.toast.show{
+
+    opacity:1;
+
+}
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.loader{
+
+    width:45px;
+
+    height:45px;
+
+    border:5px solid #e5e7eb;
+
+    border-top:5px solid #2563eb;
+
+    border-radius:50%;
+
+    animation:spin .9s linear infinite;
+
+    margin:auto;
+
+}
+
+@keyframes spin{
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================================
+   SCROLLBAR
+========================================================== */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#cbd5e1;
+
+    border-radius:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#f8fafc;
+
+}

@@ -1,0 +1,21 @@
+Vehicle ID,Registration,Vehicle Name,Type,Status,Odometer
+1,CG04AB0001,Fleet Vehicle 1,Van,Maintenance,97856.0
+2,CG04AB0002,Fleet Vehicle 2,Truck,Maintenance,131758.0
+3,CG04AB0003,Fleet Vehicle 3,Bus,In Use,132186.0
+4,CG04AB0004,Fleet Vehicle 4,Van,In Use,82709.0
+5,CG04AB0005,Fleet Vehicle 5,Truck,Available,34105.0
+6,CG04AB0006,Fleet Vehicle 6,Bus,Available,111202.0
+7,CG04AB0007,Fleet Vehicle 7,Van,Maintenance,130939.0
+8,CG04AB0008,Fleet Vehicle 8,Bus,Maintenance,91852.0
+9,CG04AB0009,Fleet Vehicle 9,Bus,Maintenance,24113.0
+10,CG04AB0010,Fleet Vehicle 10,Mini Truck,Available,30004.0
+11,CG04AB0011,Fleet Vehicle 11,Bus,Available,139861.0
+12,CG04AB0012,Fleet Vehicle 12,Bus,In Use,20186.0
+13,CG04AB0013,Fleet Vehicle 13,Bus,Available,115759.0
+14,CG04AB0014,Fleet Vehicle 14,Bus,In Use,117404.0
+15,CG04AB0015,Fleet Vehicle 15,Bus,Available,49649.0
+16,CG04AB0016,Fleet Vehicle 16,Mini Truck,In Use,81913.0
+17,CG04AB0017,Fleet Vehicle 17,Truck,Available,106954.0
+18,CG04AB0018,Fleet Vehicle 18,Truck,In Use,22649.0
+19,CG04AB0019,Fleet Vehicle 19,Mini Truck,Available,22669.0
+20,CG04AB0020,Fleet Vehicle 20,Bus,In Use,69010.0

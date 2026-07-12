@@ -3,6 +3,12 @@ from sqlalchemy.orm import Session
 from models.vehicle import Vehicle
 from schemas.vehicle import VehicleCreate, VehicleUpdate
 
+import os
+import csv
+
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib import colors
+
 
 # ==========================
 # VEHICLE CRUD OPERATIONS
@@ -1031,3 +1037,348 @@ def get_dashboard_alerts(db: Session):
         "expired_driver_licenses": expired_licenses,
         "active_trips": active_trips
     }
+    
+# ==========================================
+# REPORTS API
+# ==========================================
+
+from datetime import datetime, timedelta
+from sqlalchemy import func
+
+
+# -----------------------------
+# Daily Report
+# -----------------------------
+def get_daily_report(db: Session):
+
+    today = datetime.now().date()
+
+    trips = db.query(Trip).filter(
+        func.date(Trip.start_time) == today
+    ).count()
+
+    fuel_cost = db.query(
+        func.coalesce(func.sum(Fuel.fuel_cost), 0)
+    ).filter(
+        Fuel.date == today
+    ).scalar()
+
+    expenses = db.query(
+        func.coalesce(func.sum(Expense.amount), 0)
+    ).filter(
+        Expense.expense_date == today
+    ).scalar()
+
+    maintenance = db.query(
+        func.coalesce(func.sum(Maintenance.cost), 0)
+    ).filter(
+        Maintenance.service_date == today
+    ).scalar()
+
+    return {
+        "date": str(today),
+        "trips": trips,
+        "fuel_cost": round(fuel_cost,2),
+        "maintenance_cost": round(maintenance,2),
+        "expenses": round(expenses,2),
+        "total_cost": round(
+            fuel_cost +
+            maintenance +
+            expenses,
+            2
+        )
+    }
+
+
+# -----------------------------
+# Weekly Report
+# -----------------------------
+def get_weekly_report(db: Session):
+
+    today = datetime.now().date()
+    week = today - timedelta(days=7)
+
+    trips = db.query(Trip).filter(
+        Trip.start_time >= week
+    ).count()
+
+    fuel = db.query(
+        func.coalesce(func.sum(Fuel.fuel_cost),0)
+    ).filter(
+        Fuel.date >= week
+    ).scalar()
+
+    maintenance = db.query(
+        func.coalesce(func.sum(Maintenance.cost),0)
+    ).filter(
+        Maintenance.service_date >= week
+    ).scalar()
+
+    expenses = db.query(
+        func.coalesce(func.sum(Expense.amount),0)
+    ).filter(
+        Expense.expense_date >= week
+    ).scalar()
+
+    return {
+        "period":"Last 7 Days",
+        "trips":trips,
+        "fuel_cost":round(fuel,2),
+        "maintenance_cost":round(maintenance,2),
+        "expenses":round(expenses,2),
+        "total_cost":round(
+            fuel +
+            maintenance +
+            expenses,
+            2
+        )
+    }
+
+
+# -----------------------------
+# Monthly Report
+# -----------------------------
+def get_monthly_report(db: Session):
+
+    month = datetime.now().month
+    year = datetime.now().year
+
+    trips = db.query(Trip).filter(
+        func.extract("month",Trip.start_time)==month,
+        func.extract("year",Trip.start_time)==year
+    ).count()
+
+    fuel = db.query(
+        func.coalesce(func.sum(Fuel.fuel_cost),0)
+    ).filter(
+        func.extract("month",Fuel.date)==month,
+        func.extract("year",Fuel.date)==year
+    ).scalar()
+
+    maintenance = db.query(
+        func.coalesce(func.sum(Maintenance.cost),0)
+    ).filter(
+        func.extract("month",Maintenance.service_date)==month,
+        func.extract("year",Maintenance.service_date)==year
+    ).scalar()
+
+    expenses = db.query(
+        func.coalesce(func.sum(Expense.amount),0)
+    ).filter(
+        func.extract("month",Expense.expense_date)==month,
+        func.extract("year",Expense.expense_date)==year
+    ).scalar()
+
+    return {
+        "month":month,
+        "year":year,
+        "trips":trips,
+        "fuel_cost":round(fuel,2),
+        "maintenance_cost":round(maintenance,2),
+        "expenses":round(expenses,2),
+        "total_cost":round(
+            fuel +
+            maintenance +
+            expenses,
+            2
+        )
+    }
+
+
+# -----------------------------
+# Fleet Report
+# -----------------------------
+def get_fleet_report(db: Session):
+
+    vehicles = db.query(Vehicle).all()
+
+    report=[]
+
+    for vehicle in vehicles:
+
+        report.append({
+
+            "vehicle_id":vehicle.id,
+            "registration":vehicle.registration_number,
+            "name":vehicle.vehicle_name,
+            "type":vehicle.vehicle_type,
+            "status":vehicle.status,
+            "odometer":vehicle.odometer
+
+        })
+
+    return report
+
+
+# -----------------------------
+# Driver Report
+# -----------------------------
+def get_driver_report(db: Session):
+
+    drivers=db.query(Driver).all()
+
+    report=[]
+
+    for driver in drivers:
+
+        report.append({
+
+            "driver_id":driver.id,
+            "name":driver.name,
+            "license":driver.license_number,
+            "category":driver.license_category,
+            "status":driver.status,
+            "safety_score":driver.safety_score
+
+        })
+
+    return report
+
+
+# -----------------------------
+# Vehicle Report
+# -----------------------------
+def get_vehicle_report(db: Session):
+
+    vehicles=db.query(Vehicle).all()
+
+    report=[]
+
+    for vehicle in vehicles:
+
+        trip_count=db.query(Trip).filter(
+            Trip.vehicle_id==vehicle.id
+        ).count()
+
+        fuel_cost=db.query(
+            func.coalesce(
+                func.sum(Fuel.fuel_cost),
+                0
+            )
+        ).filter(
+            Fuel.vehicle_id==vehicle.id
+        ).scalar()
+
+        maintenance_cost=db.query(
+            func.coalesce(
+                func.sum(Maintenance.cost),
+                0
+            )
+        ).filter(
+            Maintenance.vehicle_id==vehicle.id
+        ).scalar()
+
+        report.append({
+
+            "vehicle_id":vehicle.id,
+            "registration":vehicle.registration_number,
+            "vehicle":vehicle.vehicle_name,
+            "trip_count":trip_count,
+            "fuel_cost":round(fuel_cost,2),
+            "maintenance_cost":round(maintenance_cost,2),
+            "status":vehicle.status
+
+        })
+
+    return report
+
+# ==========================================
+# CSV EXPORT
+# ==========================================
+
+def export_csv(db: Session):
+
+    os.makedirs("exports", exist_ok=True)
+
+    filepath = os.path.join(
+        "exports",
+        "transit_report.csv"
+    )
+
+    vehicles = db.query(Vehicle).all()
+
+    with open(
+        filepath,
+        "w",
+        newline="",
+        encoding="utf-8"
+    ) as file:
+
+        writer = csv.writer(file)
+
+        writer.writerow([
+            "Vehicle ID",
+            "Registration",
+            "Vehicle Name",
+            "Type",
+            "Status",
+            "Odometer"
+        ])
+
+        for vehicle in vehicles:
+
+            writer.writerow([
+
+                vehicle.id,
+                vehicle.registration_number,
+                vehicle.vehicle_name,
+                vehicle.vehicle_type,
+                vehicle.status,
+                vehicle.odometer
+
+            ])
+
+    return filepath
+
+# ==========================================
+# PDF EXPORT
+# ==========================================
+
+def export_pdf(db: Session):
+
+    os.makedirs("exports", exist_ok=True)
+
+    filepath = os.path.join(
+        "exports",
+        "transit_report.pdf"
+    )
+
+    pdf = SimpleDocTemplate(filepath)
+
+    data = [[
+
+        "ID",
+        "Vehicle",
+        "Registration",
+        "Status"
+
+    ]]
+
+    vehicles = db.query(Vehicle).all()
+
+    for vehicle in vehicles:
+
+        data.append([
+
+            vehicle.id,
+            vehicle.vehicle_name,
+            vehicle.registration_number,
+            vehicle.status
+
+        ])
+
+    table = Table(data)
+
+    table.setStyle(TableStyle([
+
+        ("BACKGROUND", (0,0), (-1,0), colors.grey),
+        ("TEXTCOLOR", (0,0), (-1,0), colors.whitesmoke),
+        ("GRID", (0,0), (-1,-1), 1, colors.black),
+        ("BACKGROUND", (0,1), (-1,-1), colors.beige),
+        ("BOTTOMPADDING", (0,0), (-1,0), 8)
+
+    ]))
+
+    pdf.build([table])
+
+    return filepath

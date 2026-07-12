@@ -91,3 +91,95 @@ def delete_vehicle(
     db.commit()
 
     return db_vehicle
+
+# ==========================
+# DRIVER CRUD OPERATIONS
+# ==========================
+
+from models.driver import Driver
+from schemas.driver import DriverCreate, DriverUpdate
+
+
+def get_all_drivers(db: Session):
+    return db.query(Driver).order_by(Driver.id.desc()).all()
+
+
+def get_driver_by_id(db: Session, driver_id: int):
+    return (
+        db.query(Driver)
+        .filter(Driver.id == driver_id)
+        .first()
+    )
+
+
+def get_driver_by_license(db: Session, license_number: str):
+    return (
+        db.query(Driver)
+        .filter(Driver.license_number == license_number)
+        .first()
+    )
+
+
+def create_driver(db: Session, driver: DriverCreate):
+
+    existing = get_driver_by_license(
+        db,
+        driver.license_number
+    )
+
+    if existing:
+        raise ValueError("Driver license already exists.")
+
+    db_driver = Driver(
+        name=driver.name,
+        license_number=driver.license_number,
+        license_category=driver.license_category,
+        license_expiry_date=driver.license_expiry_date,
+        contact_number=driver.contact_number,
+        safety_score=driver.safety_score,
+        status=driver.status
+    )
+
+    db.add(db_driver)
+    db.commit()
+    db.refresh(db_driver)
+
+    return db_driver
+
+
+def update_driver(
+    db: Session,
+    driver_id: int,
+    driver: DriverUpdate
+):
+
+    db_driver = get_driver_by_id(db, driver_id)
+
+    if not db_driver:
+        return None
+
+    update_data = driver.model_dump(exclude_unset=True)
+
+    for key, value in update_data.items():
+        setattr(db_driver, key, value)
+
+    db.commit()
+    db.refresh(db_driver)
+
+    return db_driver
+
+
+def delete_driver(
+    db: Session,
+    driver_id: int
+):
+
+    db_driver = get_driver_by_id(db, driver_id)
+
+    if not db_driver:
+        return None
+
+    db.delete(db_driver)
+    db.commit()
+
+    return db_driver

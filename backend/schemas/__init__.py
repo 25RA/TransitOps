@@ -4,3 +4,10 @@ from .vehicle import (
     VehicleUpdate,
     VehicleResponse,
 )
+
+from .driver import (
+    DriverBase,
+    DriverCreate,
+    DriverUpdate,
+    DriverResponse,
+)

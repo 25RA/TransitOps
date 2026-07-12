@@ -18,3 +18,10 @@ from .trip import (
     TripUpdate,
     TripResponse,
 )
+
+from .maintenance import (
+    MaintenanceBase,
+    MaintenanceCreate,
+    MaintenanceUpdate,
+    MaintenanceResponse,
+)

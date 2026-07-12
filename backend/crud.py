@@ -334,3 +334,157 @@ def delete_trip(
     db.commit()
 
     return db_trip
+
+# ==========================
+# MAINTENANCE CRUD OPERATIONS
+# ==========================
+
+from models.maintenance import Maintenance
+from models.vehicle import Vehicle
+
+from schemas.maintenance import (
+    MaintenanceCreate,
+    MaintenanceUpdate,
+)
+
+
+def get_all_maintenance(db: Session):
+    return (
+        db.query(Maintenance)
+        .order_by(Maintenance.service_date.desc())
+        .all()
+    )
+
+
+def get_maintenance_by_id(
+    db: Session,
+    maintenance_id: int
+):
+    return (
+        db.query(Maintenance)
+        .filter(Maintenance.id == maintenance_id)
+        .first()
+    )
+
+
+def get_vehicle_maintenance(
+    db: Session,
+    vehicle_id: int
+):
+    return (
+        db.query(Maintenance)
+        .filter(Maintenance.vehicle_id == vehicle_id)
+        .order_by(Maintenance.service_date.desc())
+        .all()
+    )
+
+
+def create_maintenance(
+    db: Session,
+    maintenance: MaintenanceCreate
+):
+
+    vehicle = (
+        db.query(Vehicle)
+        .filter(Vehicle.id == maintenance.vehicle_id)
+        .first()
+    )
+
+    if not vehicle:
+        raise ValueError("Vehicle not found.")
+
+    if maintenance.next_service_date <= maintenance.service_date:
+        raise ValueError(
+            "Next service date must be after service date."
+        )
+
+    db_record = Maintenance(
+        vehicle_id=maintenance.vehicle_id,
+        service_type=maintenance.service_type,
+        service_date=maintenance.service_date,
+        next_service_date=maintenance.next_service_date,
+        vendor=maintenance.vendor,
+        cost=maintenance.cost,
+        notes=maintenance.notes,
+        status=maintenance.status
+    )
+
+    db.add(db_record)
+    db.commit()
+    db.refresh(db_record)
+
+    return db_record
+
+
+def update_maintenance(
+    db: Session,
+    maintenance_id: int,
+    maintenance: MaintenanceUpdate
+):
+
+    db_record = get_maintenance_by_id(
+        db,
+        maintenance_id
+    )
+
+    if not db_record:
+        return None
+
+    update_data = maintenance.model_dump(
+        exclude_unset=True
+    )
+
+    if "vehicle_id" in update_data:
+
+        vehicle = (
+            db.query(Vehicle)
+            .filter(
+                Vehicle.id == update_data["vehicle_id"]
+            )
+            .first()
+        )
+
+        if not vehicle:
+            raise ValueError("Vehicle not found.")
+
+    service_date = update_data.get(
+        "service_date",
+        db_record.service_date
+    )
+
+    next_service_date = update_data.get(
+        "next_service_date",
+        db_record.next_service_date
+    )
+
+    if next_service_date <= service_date:
+        raise ValueError(
+            "Next service date must be after service date."
+        )
+
+    for key, value in update_data.items():
+        setattr(db_record, key, value)
+
+    db.commit()
+    db.refresh(db_record)
+
+    return db_record
+
+
+def delete_maintenance(
+    db: Session,
+    maintenance_id: int
+):
+
+    db_record = get_maintenance_by_id(
+        db,
+        maintenance_id
+    )
+
+    if not db_record:
+        return None
+
+    db.delete(db_record)
+    db.commit()
+
+    return db_record

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TransitOps | Settings</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="stylesheet" href="css/dashboard.css">
+
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+<!-- Sidebar -->
+
+<aside class="sidebar">
+
+<div class="logo">
+
+<i class="fas fa-truck-moving"></i>
+
+<span>TransitOps</span>
+
+</div>
+
+<ul class="sidebar-menu">
+
+<li><a href="dashboard.html"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a></li>
+
+<li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Vehicles</span></a></li>
+
+<li><a href="drivers.html"><i class="fas fa-user"></i><span>Drivers</span></a></li>
+
+<li><a href="trips.html"><i class="fas fa-route"></i><span>Trips</span></a></li>
+
+<li><a href="fuel.html"><i class="fas fa-gas-pump"></i><span>Fuel</span></a></li>
+
+<li><a href="maintenance.html"><i class="fas fa-screwdriver-wrench"></i><span>Maintenance</span></a></li>
+
+<li><a href="expenses.html"><i class="fas fa-wallet"></i><span>Expenses</span></a></li>
+
+<li><a href="reports.html"><i class="fas fa-chart-line"></i><span>Reports</span></a></li>
+
+<li>
+
+<a href="settings.html" class="active">
+
+<i class="fas fa-gear"></i>
+
+<span>Settings</span>
+
+</a>
+
+</li>
+
+</ul>
+
+</aside>
+
+<!-- Main -->
+
+<main class="main-content">
+
+<header class="topbar">
+
+<div>
+
+<h1>System Settings</h1>
+
+<p>Configure your TransitOps workspace</p>
+
+</div>
+
+<button class="btn btn-primary">
+
+<i class="fas fa-save"></i>
+
+Save Settings
+
+</button>
+
+</header>
+
+<div class="dashboard-grid">
+
+<div class="card">
+
+<h3><i class="fas fa-user"></i> Administrator</h3>
+
+<br>
+
+<label>Name</label>
+
+<input class="form-control" value="Fleet Administrator">
+
+<br>
+
+<label>Email</label>
+
+<input class="form-control" value="admin@transitops.com">
+
+<br>
+
+<label>Phone</label>
+
+<input class="form-control" value="+91 9876543210">
+
+</div>
+
+<div class="card">
+
+<h3><i class="fas fa-building"></i> Company</h3>
+
+<br>
+
+<label>Company Name</label>
+
+<input class="form-control" value="TransitOps Logistics">
+
+<br>
+
+<label>Fleet Size</label>
+
+<input class="form-control" value="20 Vehicles">
+
+<br>
+
+<label>Region</label>
+
+<input class="form-control" value="India">
+
+</div>
+
+<div class="card">
+
+<h3><i class="fas fa-bell"></i> Notifications</h3>
+
+<br>
+
+<label><input type="checkbox" checked> Maintenance Alerts</label>
+
+<br><br>
+
+<label><input type="checkbox" checked> Fuel Alerts</label>
+
+<br><br>
+
+<label><input type="checkbox" checked> Driver Alerts</label>
+
+<br><br>
+
+<label><input type="checkbox"> Email Reports</label>
+
+</div>
+
+<div class="card">
+
+<h3><i class="fas fa-shield-halved"></i> Security</h3>
+
+<br>
+
+<label><input type="checkbox" checked> Two Factor Authentication</label>
+
+<br><br>
+
+<label><input type="checkbox" checked> Login Audit Logs</label>
+
+<br><br>
+
+<label><input type="checkbox"> Auto Logout</label>
+
+<br><br>
+
+<label><input type="checkbox" checked> Secure API Access</label>
+
+</div>
+
+<div class="card">
+
+<h3><i class="fas fa-palette"></i> Appearance</h3>
+
+<br>
+
+<label>Theme</label>
+
+<select class="form-control">
+
+<option>Light</option>
+
+<option>Dark</option>
+
+<option>System Default</option>
+
+</select>
+
+<br>
+
+<label>Language</label>
+
+<select class="form-control">
+
+<option>English</option>
+
+<option>Hindi</option>
+
+</select>
+
+</div>
+
+<div class="card">
+
+<h3><i class="fas fa-database"></i> Backup</h3>
+
+<br>
+
+<button class="btn btn-success">
+
+<i class="fas fa-download"></i>
+
+Download Backup
+
+</button>
+
+<br><br>
+
+<button class="btn btn-warning">
+
+<i class="fas fa-upload"></i>
+
+Restore Backup
+
+</button>
+
+<br><br>
+
+<button class="btn btn-danger">
+
+<i class="fas fa-trash"></i>
+
+Reset Settings
+
+</button>
+
+</div>
+
+</div>
+
+</main>
+
+</div>
+
+</body>
+
+</html>

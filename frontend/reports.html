@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>TransitOps | Reports</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="css/dashboard.css">
+
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+<aside class="sidebar">
+
+<div class="logo">
+
+<i class="fas fa-truck-moving"></i>
+
+<span>TransitOps</span>
+
+</div>
+
+<ul class="sidebar-menu">
+
+<li><a href="dashboard.html"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a></li>
+
+<li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Vehicles</span></a></li>
+
+<li><a href="drivers.html"><i class="fas fa-user"></i><span>Drivers</span></a></li>
+
+<li><a href="trips.html"><i class="fas fa-route"></i><span>Trips</span></a></li>
+
+<li><a href="fuel.html"><i class="fas fa-gas-pump"></i><span>Fuel</span></a></li>
+
+<li><a href="maintenance.html"><i class="fas fa-screwdriver-wrench"></i><span>Maintenance</span></a></li>
+
+<li><a href="expenses.html"><i class="fas fa-wallet"></i><span>Expenses</span></a></li>
+
+<li>
+
+<a href="reports.html" class="active">
+
+<i class="fas fa-chart-line"></i>
+
+<span>Reports</span>
+
+</a>
+
+</li>
+
+<li><a href="settings.html"><i class="fas fa-gear"></i><span>Settings</span></a></li>
+
+</ul>
+
+</aside>
+
+<main class="main-content">
+
+<header class="topbar">
+
+<div>
+
+<h1>Reports & Analytics</h1>
+
+<p>
+
+Daily, Weekly, Monthly and Fleet Reports
+
+</p>
+
+</div>
+
+<div class="topbar-right">
+
+<button class="btn btn-success"
+        onclick="loadReports()">
+
+<i class="fas fa-rotate"></i>
+
+Refresh
+
+</button>
+
+<button class="btn btn-primary"
+        onclick="exportCSV()">
+
+<i class="fas fa-file-csv"></i>
+
+CSV
+
+</button>
+
+<button class="btn btn-danger"
+        onclick="exportPDF()">
+
+<i class="fas fa-file-pdf"></i>
+
+PDF
+
+</button>
+
+</div>
+
+</header>
+
+<div class="stats-grid">
+
+<div class="stat-card">
+
+<div>
+
+<p>Today's Trips</p>
+
+<h2 id="todayTrips">0</h2>
+
+</div>
+
+<div class="stat-icon">
+
+<i class="fas fa-route"></i>
+
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div>
+
+<p>Fuel Cost</p>
+
+<h2 id="todayFuel">₹0</h2>
+
+</div>
+
+<div class="stat-icon">
+
+<i class="fas fa-gas-pump"></i>
+
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div>
+
+<p>Maintenance</p>
+
+<h2 id="todayMaintenance">₹0</h2>
+
+</div>
+
+<div class="stat-icon">
+
+<i class="fas fa-screwdriver-wrench"></i>
+
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div>
+
+<p>Total Cost</p>
+
+<h2 id="todayTotal">₹0</h2>
+
+</div>
+
+<div class="stat-icon">
+
+<i class="fas fa-indian-rupee-sign"></i>
+
+</div>
+
+</div>
+
+</div>
+        <!-- ==========================================================
+             Reports Analytics
+        =========================================================== -->
+
+        <section class="dashboard-grid mt-30">
+
+            <div class="card chart-card">
+
+                <div class="card-header">
+
+                    <h3>
+
+                        <i class="fas fa-chart-line"></i>
+
+                        Cost Breakdown
+
+                    </h3>
+
+                </div>
+
+                <canvas id="reportChart"></canvas>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3>
+
+                        <i class="fas fa-file-alt"></i>
+
+                        Daily Report Summary
+
+                    </h3>
+
+                </div>
+
+                <div class="summary-box">
+
+                    <div class="summary-item">
+
+                        <span>Date</span>
+
+                        <strong id="reportDate">
+
+                            --
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-item">
+
+                        <span>Trips</span>
+
+                        <strong id="reportTrips">
+
+                            0
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-item">
+
+                        <span>Expenses</span>
+
+                        <strong id="reportExpenses">
+
+                            ₹0
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-item">
+
+                        <span>Total Cost</span>
+
+                        <strong id="reportTotal">
+
+                            ₹0
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ==========================================================
+             Report Actions
+        =========================================================== -->
+
+        <section class="card mt-30">
+
+            <div class="card-header">
+
+                <h3>
+
+                    <i class="fas fa-folder-open"></i>
+
+                    Available Reports
+
+                </h3>
+
+            </div>
+
+            <div class="stats-grid">
+
+                <button class="btn btn-primary"
+                        onclick="loadDailyReport()">
+
+                    <i class="fas fa-calendar-day"></i>
+
+                    Daily Report
+
+                </button>
+
+                <button class="btn btn-success"
+                        onclick="loadWeeklyReport()">
+
+                    <i class="fas fa-calendar-week"></i>
+
+                    Weekly Report
+
+                </button>
+
+                <button class="btn btn-warning"
+                        onclick="loadMonthlyReport()">
+
+                    <i class="fas fa-calendar"></i>
+
+                    Monthly Report
+
+                </button>
+
+                <button class="btn btn-info"
+                        onclick="loadFleetReport()">
+
+                    <i class="fas fa-truck"></i>
+
+                    Fleet Report
+
+                </button>
+
+                <button class="btn btn-secondary"
+                        onclick="loadDriverReport()">
+
+                    <i class="fas fa-users"></i>
+
+                    Driver Report
+
+                </button>
+
+                <button class="btn btn-dark"
+                        onclick="loadVehicleReport()">
+
+                    <i class="fas fa-car-side"></i>
+
+                    Vehicle Report
+
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- ==========================================================
+             Toast
+        =========================================================== -->
+
+        <div id="toast"
+             class="toast">
+
+        </div>
+        <!-- ==========================================================
+             Loader
+        =========================================================== -->
+
+        <div id="loader"
+             style="
+                display:none;
+                position:fixed;
+                inset:0;
+                background:rgba(255,255,255,.75);
+                z-index:9999;
+                justify-content:center;
+                align-items:center;
+             ">
+
+            <div class="loader"></div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- ==========================================================
+     Scripts
+========================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="js/api.js"></script>
+
+<script src="js/reports.js"></script>
+
+</body>
+
+</html>

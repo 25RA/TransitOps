@@ -11,3 +11,10 @@ from .driver import (
     DriverUpdate,
     DriverResponse,
 )
+
+from .trip import (
+    TripBase,
+    TripCreate,
+    TripUpdate,
+    TripResponse,
+)

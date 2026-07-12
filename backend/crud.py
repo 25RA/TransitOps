@@ -183,3 +183,154 @@ def delete_driver(
     db.commit()
 
     return db_driver
+
+# ==========================
+# TRIP CRUD OPERATIONS
+# ==========================
+
+from models.trip import Trip
+from models.vehicle import Vehicle
+from models.driver import Driver
+
+from schemas.trip import TripCreate, TripUpdate
+
+
+def get_all_trips(db: Session):
+    return db.query(Trip).order_by(Trip.id.desc()).all()
+
+
+def get_trip_by_id(db: Session, trip_id: int):
+    return (
+        db.query(Trip)
+        .filter(Trip.id == trip_id)
+        .first()
+    )
+
+
+def create_trip(db: Session, trip: TripCreate):
+
+    # Validate Vehicle
+    vehicle = (
+        db.query(Vehicle)
+        .filter(Vehicle.id == trip.vehicle_id)
+        .first()
+    )
+
+    if not vehicle:
+        raise ValueError("Vehicle not found.")
+
+    # Validate Driver
+    driver = (
+        db.query(Driver)
+        .filter(Driver.id == trip.driver_id)
+        .first()
+    )
+
+    if not driver:
+        raise ValueError("Driver not found.")
+
+    # Check Vehicle Availability
+    active_vehicle_trip = (
+        db.query(Trip)
+        .filter(
+            Trip.vehicle_id == trip.vehicle_id,
+            Trip.status.in_(["Scheduled", "In Progress"])
+        )
+        .first()
+    )
+
+    if active_vehicle_trip:
+        raise ValueError("Vehicle already assigned to another active trip.")
+
+    # Check Driver Availability
+    active_driver_trip = (
+        db.query(Trip)
+        .filter(
+            Trip.driver_id == trip.driver_id,
+            Trip.status.in_(["Scheduled", "In Progress"])
+        )
+        .first()
+    )
+
+    if active_driver_trip:
+        raise ValueError("Driver already assigned to another active trip.")
+
+    db_trip = Trip(
+        vehicle_id=trip.vehicle_id,
+        driver_id=trip.driver_id,
+        source=trip.source,
+        destination=trip.destination,
+        start_time=trip.start_time,
+        end_time=trip.end_time,
+        distance_km=trip.distance_km,
+        cargo_weight=trip.cargo_weight,
+        status=trip.status
+    )
+
+    db.add(db_trip)
+    db.commit()
+    db.refresh(db_trip)
+
+    return db_trip
+
+
+def update_trip(
+    db: Session,
+    trip_id: int,
+    trip: TripUpdate
+):
+
+    db_trip = get_trip_by_id(db, trip_id)
+
+    if not db_trip:
+        return None
+
+    update_data = trip.model_dump(exclude_unset=True)
+
+    # Validate Vehicle if updated
+    if "vehicle_id" in update_data:
+
+        vehicle = (
+            db.query(Vehicle)
+            .filter(Vehicle.id == update_data["vehicle_id"])
+            .first()
+        )
+
+        if not vehicle:
+            raise ValueError("Vehicle not found.")
+
+    # Validate Driver if updated
+    if "driver_id" in update_data:
+
+        driver = (
+            db.query(Driver)
+            .filter(Driver.id == update_data["driver_id"])
+            .first()
+        )
+
+        if not driver:
+            raise ValueError("Driver not found.")
+
+    for key, value in update_data.items():
+        setattr(db_trip, key, value)
+
+    db.commit()
+    db.refresh(db_trip)
+
+    return db_trip
+
+
+def delete_trip(
+    db: Session,
+    trip_id: int
+):
+
+    db_trip = get_trip_by_id(db, trip_id)
+
+    if not db_trip:
+        return None
+
+    db.delete(db_trip)
+    db.commit()
+
+    return db_trip

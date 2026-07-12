@@ -718,3 +718,316 @@ def delete_expense(
     db.commit()
 
     return db_expense
+
+# ==========================================
+# DASHBOARD ANALYTICS
+# ==========================================
+
+from sqlalchemy import func
+from datetime import date, timedelta
+
+from models.vehicle import Vehicle
+from models.driver import Driver
+from models.trip import Trip
+from models.fuel import Fuel
+from models.maintenance import Maintenance
+from models.expense import Expense
+
+
+# ==========================
+# DASHBOARD SUMMARY
+# ==========================
+
+def get_dashboard_summary(db: Session):
+
+    total_vehicles = db.query(Vehicle).count()
+
+    available_vehicles = (
+        db.query(Vehicle)
+        .filter(Vehicle.status == "Available")
+        .count()
+    )
+
+    active_trips = (
+        db.query(Trip)
+        .filter(Trip.status == "In Progress")
+        .count()
+    )
+
+    total_drivers = db.query(Driver).count()
+
+    available_drivers = (
+        db.query(Driver)
+        .filter(Driver.status == "Available")
+        .count()
+    )
+
+    fuel_cost = (
+        db.query(func.coalesce(func.sum(Fuel.fuel_cost), 0))
+        .scalar()
+    )
+
+    maintenance_cost = (
+        db.query(func.coalesce(func.sum(Maintenance.cost), 0))
+        .scalar()
+    )
+
+    expense_cost = (
+        db.query(func.coalesce(func.sum(Expense.amount), 0))
+        .scalar()
+    )
+
+    return {
+        "total_vehicles": total_vehicles,
+        "available_vehicles": available_vehicles,
+        "active_trips": active_trips,
+        "total_drivers": total_drivers,
+        "available_drivers": available_drivers,
+        "fuel_cost": round(fuel_cost, 2),
+        "maintenance_cost": round(maintenance_cost, 2),
+        "expense_cost": round(expense_cost, 2),
+        "total_operational_cost": round(
+            fuel_cost +
+            maintenance_cost +
+            expense_cost,
+            2
+        )
+    }
+
+
+# ==========================
+# FLEET STATISTICS
+# ==========================
+
+def get_fleet_statistics(db: Session):
+
+    available = (
+        db.query(Vehicle)
+        .filter(Vehicle.status == "Available")
+        .count()
+    )
+
+    in_use = (
+        db.query(Vehicle)
+        .filter(Vehicle.status == "In Use")
+        .count()
+    )
+
+    maintenance = (
+        db.query(Vehicle)
+        .filter(Vehicle.status == "Maintenance")
+        .count()
+    )
+
+    inactive = (
+        db.query(Vehicle)
+        .filter(Vehicle.status == "Inactive")
+        .count()
+    )
+
+    return {
+        "available": available,
+        "in_use": in_use,
+        "maintenance": maintenance,
+        "inactive": inactive
+    }
+
+
+# ==========================
+# DRIVER STATISTICS
+# ==========================
+
+def get_driver_statistics(db: Session):
+
+    available = (
+        db.query(Driver)
+        .filter(Driver.status == "Available")
+        .count()
+    )
+
+    assigned = (
+        db.query(Driver)
+        .filter(Driver.status == "Assigned")
+        .count()
+    )
+
+    inactive = (
+        db.query(Driver)
+        .filter(Driver.status == "Inactive")
+        .count()
+    )
+
+    average_score = (
+        db.query(
+            func.coalesce(
+                func.avg(
+                    Driver.safety_score
+                ),
+                0
+            )
+        ).scalar()
+    )
+
+    return {
+        "total_drivers": db.query(Driver).count(),
+        "available": available,
+        "assigned": assigned,
+        "inactive": inactive,
+        "average_safety_score": round(
+            average_score,
+            2
+        )
+    }
+    
+
+from datetime import date, timedelta
+from sqlalchemy import func
+
+
+# ==========================
+# FUEL ANALYTICS
+# ==========================
+
+def get_fuel_statistics(db: Session):
+
+    total_logs = db.query(Fuel).count()
+
+    total_quantity = (
+        db.query(
+            func.coalesce(
+                func.sum(Fuel.fuel_quantity),
+                0
+            )
+        ).scalar()
+    )
+
+    total_cost = (
+        db.query(
+            func.coalesce(
+                func.sum(Fuel.fuel_cost),
+                0
+            )
+        ).scalar()
+    )
+
+    avg_price = (
+        total_cost / total_quantity
+        if total_quantity > 0 else 0
+    )
+
+    return {
+        "total_logs": total_logs,
+        "total_quantity": round(total_quantity, 2),
+        "total_cost": round(total_cost, 2),
+        "average_price_per_unit": round(avg_price, 2)
+    }
+
+
+# ==========================
+# MAINTENANCE ANALYTICS
+# ==========================
+
+def get_maintenance_statistics(db: Session):
+
+    total_records = db.query(Maintenance).count()
+
+    total_cost = (
+        db.query(
+            func.coalesce(
+                func.sum(Maintenance.cost),
+                0
+            )
+        ).scalar()
+    )
+
+    completed = (
+        db.query(Maintenance)
+        .filter(
+            Maintenance.status == "Completed"
+        )
+        .count()
+    )
+
+    scheduled = (
+        db.query(Maintenance)
+        .filter(
+            Maintenance.status == "Scheduled"
+        )
+        .count()
+    )
+
+    return {
+        "total_records": total_records,
+        "completed": completed,
+        "scheduled": scheduled,
+        "total_cost": round(total_cost, 2)
+    }
+
+
+# ==========================
+# EXPENSE ANALYTICS
+# ==========================
+
+def get_expense_statistics(db: Session):
+
+    total_expenses = db.query(Expense).count()
+
+    total_amount = (
+        db.query(
+            func.coalesce(
+                func.sum(Expense.amount),
+                0
+            )
+        ).scalar()
+    )
+
+    average = (
+        total_amount / total_expenses
+        if total_expenses else 0
+    )
+
+    return {
+        "total_expenses": total_expenses,
+        "total_amount": round(total_amount, 2),
+        "average_expense": round(average, 2)
+    }
+
+
+# ==========================
+# ALERTS
+# ==========================
+
+def get_dashboard_alerts(db: Session):
+
+    today = date.today()
+
+    upcoming_services = (
+        db.query(Maintenance)
+        .filter(
+            Maintenance.next_service_date <=
+            today + timedelta(days=30)
+        )
+        .count()
+    )
+
+    expired_licenses = (
+        db.query(Driver)
+        .filter(
+            Driver.license_expiry_date <= today
+        )
+        .count()
+    )
+
+    active_trips = (
+        db.query(Trip)
+        .filter(
+            Trip.status == "In Progress"
+        )
+        .count()
+    )
+
+    return {
+        "upcoming_services": upcoming_services,
+        "expired_driver_licenses": expired_licenses,
+        "active_trips": active_trips
+    }

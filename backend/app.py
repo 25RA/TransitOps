@@ -6,6 +6,9 @@ from routers.trips import router as trip_router
 from routers.maintenance import router as maintenance_router
 from database import Base, engine
 from config import settings
+from routers.fuel import router as fuel_router
+from routers.expense import router as expense_router
+
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -18,6 +21,9 @@ app.include_router(vehicle_router)
 app.include_router(driver_router)
 app.include_router(trip_router)
 app.include_router(maintenance_router)
+app.include_router(fuel_router)
+app.include_router(expense_router)
+
 
 @app.get("/")
 def root():

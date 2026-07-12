@@ -488,3 +488,233 @@ def delete_maintenance(
     db.commit()
 
     return db_record
+
+# ==========================
+# FUEL CRUD OPERATIONS
+# ==========================
+
+from models.fuel import Fuel
+from schemas.fuel import FuelCreate, FuelUpdate
+
+
+def get_all_fuel_logs(db: Session):
+    return (
+        db.query(Fuel)
+        .order_by(Fuel.date.desc())
+        .all()
+    )
+
+
+def get_fuel_by_id(db: Session, fuel_id: int):
+    return (
+        db.query(Fuel)
+        .filter(Fuel.id == fuel_id)
+        .first()
+    )
+
+
+def create_fuel(db: Session, fuel: FuelCreate):
+
+    vehicle = (
+        db.query(Vehicle)
+        .filter(Vehicle.id == fuel.vehicle_id)
+        .first()
+    )
+
+    if not vehicle:
+        raise ValueError("Vehicle not found.")
+
+    db_fuel = Fuel(
+        vehicle_id=fuel.vehicle_id,
+        date=fuel.date,
+        fuel_quantity=fuel.fuel_quantity,
+        fuel_cost=fuel.fuel_cost,
+        odometer=fuel.odometer,
+        fuel_station=fuel.fuel_station,
+        remarks=fuel.remarks
+    )
+
+    db.add(db_fuel)
+    db.commit()
+    db.refresh(db_fuel)
+
+    return db_fuel
+
+
+def update_fuel(
+    db: Session,
+    fuel_id: int,
+    fuel: FuelUpdate
+):
+
+    db_fuel = get_fuel_by_id(
+        db,
+        fuel_id
+    )
+
+    if not db_fuel:
+        return None
+
+    update_data = fuel.model_dump(
+        exclude_unset=True
+    )
+
+    if "vehicle_id" in update_data:
+
+        vehicle = (
+            db.query(Vehicle)
+            .filter(
+                Vehicle.id == update_data["vehicle_id"]
+            )
+            .first()
+        )
+
+        if not vehicle:
+            raise ValueError("Vehicle not found.")
+
+    for key, value in update_data.items():
+        setattr(db_fuel, key, value)
+
+    db.commit()
+    db.refresh(db_fuel)
+
+    return db_fuel
+
+
+def delete_fuel(
+    db: Session,
+    fuel_id: int
+):
+
+    db_fuel = get_fuel_by_id(
+        db,
+        fuel_id
+    )
+
+    if not db_fuel:
+        return None
+
+    db.delete(db_fuel)
+    db.commit()
+
+    return db_fuel
+
+# ==========================
+# EXPENSE CRUD OPERATIONS
+# ==========================
+
+from models.expense import Expense
+from schemas.expense import (
+    ExpenseCreate,
+    ExpenseUpdate,
+)
+
+
+def get_all_expenses(db: Session):
+    return (
+        db.query(Expense)
+        .order_by(Expense.expense_date.desc())
+        .all()
+    )
+
+
+def get_expense_by_id(
+    db: Session,
+    expense_id: int
+):
+    return (
+        db.query(Expense)
+        .filter(Expense.id == expense_id)
+        .first()
+    )
+
+
+def create_expense(
+    db: Session,
+    expense: ExpenseCreate
+):
+
+    vehicle = (
+        db.query(Vehicle)
+        .filter(
+            Vehicle.id == expense.vehicle_id
+        )
+        .first()
+    )
+
+    if not vehicle:
+        raise ValueError("Vehicle not found.")
+
+    db_expense = Expense(
+        vehicle_id=expense.vehicle_id,
+        expense_type=expense.expense_type,
+        amount=expense.amount,
+        expense_date=expense.expense_date,
+        vendor=expense.vendor,
+        notes=expense.notes
+    )
+
+    db.add(db_expense)
+    db.commit()
+    db.refresh(db_expense)
+
+    return db_expense
+
+
+def update_expense(
+    db: Session,
+    expense_id: int,
+    expense: ExpenseUpdate
+):
+
+    db_expense = get_expense_by_id(
+        db,
+        expense_id
+    )
+
+    if not db_expense:
+        return None
+
+    update_data = expense.model_dump(
+        exclude_unset=True
+    )
+
+    if "vehicle_id" in update_data:
+
+        vehicle = (
+            db.query(Vehicle)
+            .filter(
+                Vehicle.id == update_data["vehicle_id"]
+            )
+            .first()
+        )
+
+        if not vehicle:
+            raise ValueError("Vehicle not found.")
+
+    for key, value in update_data.items():
+        setattr(db_expense, key, value)
+
+    db.commit()
+    db.refresh(db_expense)
+
+    return db_expense
+
+
+def delete_expense(
+    db: Session,
+    expense_id: int
+):
+
+    db_expense = get_expense_by_id(
+        db,
+        expense_id
+    )
+
+    if not db_expense:
+        return None
+
+    db.delete(db_expense)
+    db.commit()
+
+    return db_expense

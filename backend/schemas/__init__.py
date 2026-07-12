@@ -25,3 +25,17 @@ from .maintenance import (
     MaintenanceUpdate,
     MaintenanceResponse,
 )
+
+from .fuel import (
+    FuelBase,
+    FuelCreate,
+    FuelUpdate,
+    FuelResponse,
+)
+
+from .expense import (
+    ExpenseBase,
+    ExpenseCreate,
+    ExpenseUpdate,
+    ExpenseResponse,
+)
